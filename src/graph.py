@@ -10,6 +10,9 @@ class Node:
         self.h = 0 # euclidan distance from end node
         self.f = 0 # g + h
         self.neighboringNodes = {}
+    
+    def __hash__(self):
+        return hash(self.name)
 
     def __eq__(self, value):
         return self.name == value.name
@@ -18,7 +21,7 @@ class Node:
         return self.f < other.f
     
     def __repr__(self):
-        rep = self.name + ", position X: " + str(self.positionX) + ", position Y: " + str(self.positionY) + self.neighboringNodes
+        rep = self.name + ", position X: " + str(self.positionX) + ", position Y: " + str(self.positionY)
         return rep
 
     def calculateEuclidanDistance(self, other):
@@ -124,12 +127,11 @@ def main():
     
     for i in range(len(adjMatrix)):
         for j in range(len(adjMatrix)):
-            if j != i and adjMatrix[i][j] > 0:
-                listOfNodes[i].addEdge(listOfNodes[j], adjMatrix[i][j])
+            if j != i and int(adjMatrix[i][j]) > 0:
+                listOfNodes[i].addEdge(listOfNodes[j], int(adjMatrix[i][j]))
 
     for node in listOfNodes:
         print(node)
-    
-    # aStar(listOfNodes[0], listOfNodes[1])
+        print(node.getNeighboringNodes())
 
 if __name__ == "__main__": main()

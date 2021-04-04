@@ -17,9 +17,12 @@ class Test:
 def main():
     test = Test("test", 0, 0, 5)
     listOfTests = []
+    listOfTuples =[]
 
     for i in range(5):
         listOfTests.append(Test("test" + str(i), i, i, i))
+        tupleTest = ("test"+ str(i), i)
+        listOfTuples.append(tupleTest)
     
     listOfTests.append(Test("test", 1, 0, 10))
     listOfTests.sort()
@@ -28,5 +31,10 @@ def main():
     #     print("bisa")
     # else:
     #     print("gagal")
+
+    testTuple = ("test1", 1)
+    test = "test1"
+    if test in listOfTuples:
+        print("tuple")
 
 if __name__ == "__main__": main()
