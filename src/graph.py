@@ -118,7 +118,7 @@ def aStar(startNode, endNode):
                     openQueue.append(node)
 
 def main():
-    file = open("../test/testcase1.txt", "r")
+    file = open("../test/ITB.txt", "r")
     lines = file.readlines()
     rawNodes = []
     adjMatrix = []
@@ -147,6 +147,31 @@ def main():
         print(node.getNeighboringNodes())
 
     print("Welcome to our map!")
+    
+    #Visualisasi Graph
+    G=nx.Graph()
+    for i in range(countNodes):
+        G.add_node(rawNodes[i][0],pos=(float(rawNodes[i][1]),float(rawNodes[i][2])) )
+    
+    for i in range(len(adjMatrix)):
+        for j in range(len(adjMatrix)):
+            if j != i and float(adjMatrix[i][j]) > 0:
+                G.add_edge(rawNodes[i][0],rawNodes[j][0],weight=float(adjMatrix[i][j]))
+    pos = nx.get_node_attributes(G, 'pos')
+    
+    #labels
+    labels = nx.get_edge_attributes(G, 'weight')
+    
+    # nodes
+    nx.draw_networkx_nodes(G, pos, node_size=10)
+
+    #biar ada weight
+    nx.draw_networkx_edge_labels(G,pos, edge_labels=labels)
+    nx.draw(G,pos,node_color='blue',with_labels=True)
+    plt.show()
+    
+    #End of Visualisasi Graph
+   
     print("Please input your starting node here: ")
     for (index, node) in enumerate(listOfNodes):
         print(index+1, node)
