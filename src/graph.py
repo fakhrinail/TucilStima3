@@ -151,6 +151,8 @@ def main():
     for (index, node) in enumerate(listOfNodes):
         print(index+1, node)
     endInput = int(input())
-    aStar(listOfNodes[startInput-1], listOfNodes[endInput-1])
+    result = aStar(listOfNodes[startInput-1], listOfNodes[endInput-1])
+    print("path", result[0])
+    print("distance", result[1])
 
 if __name__ == "__main__": main()
