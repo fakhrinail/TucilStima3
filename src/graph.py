@@ -121,12 +121,13 @@ def aStar(startNode, endNode):
                     openQueue.append(node)
 
 def main():
-    file = open("../test/ITB.txt", "r")
+    file = open("../test/testcase1.txt", "r")
     lines = file.readlines()
     rawNodes = []
     adjMatrix = []
     listOfNodes = []
 
+    # read input file
     countNodes = int(lines[0])
     for i in range(1, len(lines)):
         if i <= countNodes:
@@ -134,20 +135,22 @@ def main():
         else:
             adjMatrix.append(lines[i].split())
     
+    # init nodes
     for i in range(countNodes):
         nodeName = rawNodes[i][0]
         nodePositionX = float(rawNodes[i][1])
         nodePositionY = float(rawNodes[i][2])
         listOfNodes.append(Node(nodeName, nodePositionX, nodePositionY))
     
+    # add edges to nodes
     for i in range(len(adjMatrix)):
         for j in range(len(adjMatrix)):
             if j != i and float(adjMatrix[i][j]) > 0:
                 listOfNodes[i].addEdge(listOfNodes[j], float(adjMatrix[i][j]))
 
-    for node in listOfNodes:
-        print(node)
-        print(node.getNeighboringNodes())
+    # for node in listOfNodes:
+    #     print(node)
+    #     print(node.getNeighboringNodes())
 
     print("Welcome to our map!")
     
