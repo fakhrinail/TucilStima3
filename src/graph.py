@@ -78,7 +78,45 @@ class Node:
     
     def getNeighboringNodes(self):
         return self.neighboringNodes
+    
+def drawGraph(G):
+    pos = nx.get_node_attributes(G, 'pos')
+    #labels
+    labels = nx.get_edge_attributes(G, 'weight')
+    # nodes
+    nx.draw_networkx_nodes(G, pos, node_size=10)
 
+    #biar ada weight
+    nx.draw_networkx_edge_labels(G,pos, edge_labels=labels)
+    nx.draw(G,pos,node_color='blue',with_labels=True)
+    plt.show()
+    #End of Visualisasi Graph awal
+    
+def drawResult(G,start,finish):
+    resultGraph = nx.astar_path(G, start, finish )
+    #position
+    pos = nx.get_node_attributes(G, 'pos')
+    #labels
+    labels = nx.get_edge_attributes(G, 'weight')
+    # nodes
+    nx.draw_networkx_nodes(G, pos, node_size=700)
+
+    #biar ada weight
+    nx.draw_networkx_edge_labels(G,pos, edge_labels=labels)
+
+
+    # Set all edge color attribute to black
+    for e in G.edges():
+        G[e[0]][e[1]]['color'] = 'black'
+    # Set color of edges of the shortest path to green
+    for i in range(len(resultGraph)-1):
+        G[resultGraph[i]][resultGraph[i+1]]['color'] = 'blue'
+    # Store in a list to use for drawing
+    edge_color_list = [ G[e[0]][e[1]]['color'] for e in G.edges() ]
+    node_colors = ["red" if n in resultGraph else "blue" for n in G.nodes()]
+    nx.draw(G,pos,node_color=node_colors,edge_color = edge_color_list, with_labels = True)
+    plt.show()
+    
 def aStar(startNode, endNode):
     print(startNode)
     print(endNode)
@@ -163,20 +201,8 @@ def main():
         for j in range(len(adjMatrix)):
             if j != i and float(adjMatrix[i][j]) > 0:
                 G.add_edge(rawNodes[i][0],rawNodes[j][0],weight=float(adjMatrix[i][j]))
-    pos = nx.get_node_attributes(G, 'pos')
+    drawGraph(G)
     
-    #labels
-    labels = nx.get_edge_attributes(G, 'weight')
-    
-    # nodes
-    nx.draw_networkx_nodes(G, pos, node_size=10)
-
-    #biar ada weight
-    nx.draw_networkx_edge_labels(G,pos, edge_labels=labels)
-    nx.draw(G,pos,node_color='blue',with_labels=True)
-    plt.show()
-    
-    #End of Visualisasi Graph
     print("Please input your starting node here: ")
     for (index, node) in enumerate(listOfNodes):
         print(index+1, node)
@@ -189,32 +215,9 @@ def main():
     print("path", result[0])
     print("distance", result[1])
     
-    #Visualize result path
-    resultGraph = nx.astar_path(G, listOfNodes[startInput-1].name, listOfNodes[endInput-1].name )
-    #position
-    pos = nx.get_node_attributes(G, 'pos')
-    #labels
-    labels = nx.get_edge_attributes(G, 'weight')
-    # nodes
-    nx.draw_networkx_nodes(G, pos, node_size=700)
-
-    #biar ada weight
-    nx.draw_networkx_edge_labels(G,pos, edge_labels=labels)
-
-
-    # mewarnai seluruh sisi
-    for e in G.edges():
-        G[e[0]][e[1]]['color'] = 'black'
-    # mewarnai sisi yang menjadi result path menjadi biru
-    for i in range(len(resultGraph)-1):
-        G[resultGraph[i]][resultGraph[i+1]]['color'] = 'blue'
-    # menyimpan dalam list warna-warna dari tiap sisi dan simpul
-    edge_color_list = [ G[e[0]][e[1]]['color'] for e in G.edges() ]
-    node_colors = ["red" if n in resultGraph else "blue" for n in G.nodes()]
-
-    nx.draw(G,pos,node_color=node_colors,edge_color = edge_color_list, with_labels = True)
-    plt.show()
+    #Visualize path
+    drawResult(G, listOfNodes[startInput-1].name, listOfNodes[endInput-1].name)
     
-    #end of Visualize path
+    
 
 if __name__ == "__main__": main()
