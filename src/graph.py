@@ -1,4 +1,6 @@
 import math
+import networkx as nx
+import matplotlib.pyplot as plt
 
 class Node:
     def __init__(self, name, x, y):
@@ -103,6 +105,7 @@ def aStar(startNode, endNode):
             result.reverse()
             return (result, shortestDistance)
         
+        # TODO : add exception buat nangani gaada sisi berhubungan
         listOfNeighboringNodes = currentNode.getNeighboringNodes().keys()
         for node in listOfNeighboringNodes:
             # hitung f,g,h
@@ -139,8 +142,8 @@ def main():
     
     for i in range(len(adjMatrix)):
         for j in range(len(adjMatrix)):
-            if j != i and int(adjMatrix[i][j]) > 0:
-                listOfNodes[i].addEdge(listOfNodes[j], int(adjMatrix[i][j]))
+            if j != i and float(adjMatrix[i][j]) > 0:
+                listOfNodes[i].addEdge(listOfNodes[j], float(adjMatrix[i][j]))
 
     for node in listOfNodes:
         print(node)
@@ -171,7 +174,6 @@ def main():
     plt.show()
     
     #End of Visualisasi Graph
-   
     print("Please input your starting node here: ")
     for (index, node) in enumerate(listOfNodes):
         print(index+1, node)
