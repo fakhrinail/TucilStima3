@@ -33,8 +33,8 @@ class Node:
     def setParent(self, parent):
         self.parent = parent
 
-    def setH(self, other):
-        self.h = self.calculateEuclidanDistance(other)
+    def setH(self, valueH):
+        self.h = valueH
     
     def setG(self, valueG):
         self.g = valueG
@@ -42,11 +42,16 @@ class Node:
     def setF(self, valueF):
         self.f = valueF
 
-    def setNeighboringNodes(self, listOfNodes):
-        self.neighboringNodes = listOfNodes
+    def setNeighboringNodes(self, neighboringNodes):
+        self.neighboringNodes = neighboringNodes
+    
+    # TODO : nanti ganti balik buat weighted adj matrix
+    # def addEdge(self, edgeNode, edgeValue):
+    #     edgeValue = self.calculateEuclidanDistance(edgeNode)
+    #     self.neighboringNodes[edgeNode] = edgeValue
     
     def addEdge(self, edgeNode, edgeValue):
-        self.neighboringNodes[edgeNode] = edgeValue
+            self.neighboringNodes[edgeNode] = edgeValue
 
     def getName(self):
         return self.name
@@ -73,6 +78,8 @@ class Node:
         return self.neighboringNodes
 
 def aStar(startNode, endNode):
+    print(startNode)
+    print(endNode)
     openQueue = [] # priority queue for to-be-evaluated-nodes
     finishedList = [] #  list for already evaluated nodes
     result = [] # result path
@@ -85,10 +92,11 @@ def aStar(startNode, endNode):
         finishedList.append(currentNode)
 
         if currentNode == endNode:
-            while currentNode.getParent() != None:
+            while currentNode != startNode:
                 shortestDistance += currentNode.getG()
                 result.append(currentNode)
                 currentNode = currentNode.getParent()
+            result.append(startNode)
             return (result, shortestDistance)
         
         listOfNeighboringNodes = currentNode.getNeighboringNodes().keys()
@@ -106,7 +114,7 @@ def aStar(startNode, endNode):
                     openQueue.append(node)
 
 def main():
-    file = open("../test/Alunalun.txt", "r")
+    file = open("../test/testcase1.txt", "r")
     lines = file.readlines()
     rawNodes = []
     adjMatrix = []
@@ -133,5 +141,16 @@ def main():
     for node in listOfNodes:
         print(node)
         print(node.getNeighboringNodes())
+
+    print("Welcome to our map!")
+    print("Please input your starting node here: ")
+    for (index, node) in enumerate(listOfNodes):
+        print(index+1, node)
+    startInput = int(input())
+    print("Please input your end node here: ")
+    for (index, node) in enumerate(listOfNodes):
+        print(index+1, node)
+    endInput = int(input())
+    aStar(listOfNodes[startInput-1], listOfNodes[endInput-1])
 
 if __name__ == "__main__": main()
