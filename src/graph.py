@@ -20,17 +20,25 @@ class Node:
         return self.name == value.name
     
     def __lt__(self, other):
+        if self.f == other.f:
+            return self.g < other.g
+
         return self.f < other.f
     
     def __repr__(self):
-        rep = self.name + ", position X: " + str(self.positionX) + ", position Y: " + str(self.positionY)
-        return rep
+        return self.name + ", f" + str(self.f) + ", g" + str(self.g) + ", h" + str(self.h)
 
     def calculateEuclidanDistance(self, other):
         return math.sqrt(pow(self.positionX-other.positionX, 2) + pow(self.positionY-other.positionY, 2))
     
     def calculateG(self, parent):
         return self.neighboringNodes[parent] + parent.getG()
+    
+    def resetValues(self):
+        self.parent = None
+        self.g = 0 
+        self.h = 0 
+        self.f = 0 
 
     def setParent(self, parent):
         self.parent = parent
@@ -46,11 +54,6 @@ class Node:
 
     def setNeighboringNodes(self, neighboringNodes):
         self.neighboringNodes = neighboringNodes
-    
-    # TODO : nanti ganti balik buat weighted adj matrix
-    # def addEdge(self, edgeNode, edgeValue):
-    #     edgeValue = self.calculateEuclidanDistance(edgeNode)
-    #     self.neighboringNodes[edgeNode] = edgeValue
     
     def addEdge(self, edgeNode, edgeValue):
             self.neighboringNodes[edgeNode] = edgeValue
@@ -116,63 +119,14 @@ def drawResult(G,start,finish):
     node_colors = ["red" if n in resultGraph else "blue" for n in G.nodes()]
     nx.draw(G,pos,node_color=node_colors,edge_color = edge_color_list, with_labels = True)
     plt.show()
-    
-def aStar(startNode, endNode):
-    print(startNode)
-    print(endNode)
-    openQueue = [] # priority queue for to-be-evaluated-nodes
-    finishedList = [] #  list for already evaluated nodes
-    result = [] # result path
-    shortestDistance = 0
-    
-    openQueue.append(startNode)
-    while len(openQueue) != 0:
-        openQueue.sort()
-        currentNode = openQueue.pop(0)
-        finishedList.append(currentNode)
 
-        if currentNode == endNode:
-            # TODO : benerin nilai g
-            shortestDistance = currentNode.getG()
-            while currentNode != startNode:
-                print(currentNode, currentNode.getG())
-                result.append(currentNode)
-                currentNode = currentNode.getParent()
-            result.append(startNode)
-            print(startNode, startNode.getG())
-            result.reverse()
-            return (result, shortestDistance)
-        
-        # TODO : add exception buat nangani gaada sisi berhubungan
-        listOfNeighboringNodes = currentNode.getNeighboringNodes().keys()
-        for node in listOfNeighboringNodes:
-            # hitung f,g,h
-            newG = currentNode.getG() + node.calculateG(currentNode)
-            newH = node.calculateEuclidanDistance(endNode)
-            newF = newH + newG
-            if node not in openQueue or newF < node.getF():
-                node.setG(newG)
-                node.setH(newH)
-                node.setF(newF)
-                node.setParent(currentNode)
-                if node not in openQueue:
-                    openQueue.append(node)
+def resetNodesValue(listOfNodes):
+    for node in listOfNodes:
+        node.resetValues()
 
-def main():
-    file = open("../test/testcase1.txt", "r")
-    lines = file.readlines()
-    rawNodes = []
-    adjMatrix = []
-    listOfNodes = []
+def initNodesAndEdges(rawNodes, adjMatrix, countNodes):
+    listOfNodes =  []
 
-    # read input file
-    countNodes = int(lines[0])
-    for i in range(1, len(lines)):
-        if i <= countNodes:
-            rawNodes.append(lines[i].split())
-        else:
-            adjMatrix.append(lines[i].split())
-    
     # init nodes
     for i in range(countNodes):
         nodeName = rawNodes[i][0]
@@ -185,7 +139,73 @@ def main():
         for j in range(len(adjMatrix)):
             if j != i and float(adjMatrix[i][j]) > 0:
                 listOfNodes[i].addEdge(listOfNodes[j], float(adjMatrix[i][j]))
+    
+    return listOfNodes
 
+def aStar(startNode, endNode):
+    print("start", startNode)
+    print("end", endNode)
+    openQueue = [] # priority queue for to-be-evaluated-nodes
+    finishedList = [] #  list for already evaluated nodes
+    result = [] # result path
+    shortestDistance = 0
+    
+    openQueue.append(startNode)
+    while len(openQueue) != 0:
+        openQueue.sort()
+        print(openQueue)
+        currentNode = openQueue.pop(0)
+        finishedList.append(currentNode)
+
+        if currentNode == endNode:
+            shortestDistance = currentNode.getG()
+            print(currentNode)
+            print(currentNode.getParent())
+            while currentNode != startNode:
+                print(currentNode, currentNode.getG())
+                result.append(currentNode)
+                currentNode = currentNode.getParent()
+            
+            result.append(startNode)
+            result.reverse()
+
+            return (result, shortestDistance)
+        
+        # TODO : add exception buat nangani gaada sisi berhubungan
+        listOfNeighboringNodes = currentNode.getNeighboringNodes().keys()
+        for neighboringNode in listOfNeighboringNodes:
+            if neighboringNode in finishedList:
+                continue
+            
+            # hitung f,g,h
+            newG = neighboringNode.calculateG(currentNode)
+            newH = neighboringNode.calculateEuclidanDistance(endNode)
+            newF = newH + newG
+            if newG < neighboringNode.getG() or neighboringNode not in openQueue:
+                neighboringNode.setG(newG)
+                neighboringNode.setH(newH)
+                neighboringNode.setF(newF)
+                neighboringNode.setParent(currentNode)
+                if neighboringNode not in openQueue:
+                    openQueue.append(neighboringNode)
+
+def main():
+    print("Input your file name: ")
+    fileName = input()
+    file = open("../test/" + fileName + ".txt", "r")
+    lines = file.readlines()
+    rawNodes = []
+    adjMatrix = []
+
+    # read input file
+    countNodes = int(lines[0])
+    for i in range(1, len(lines)):
+        if i <= countNodes:
+            rawNodes.append(lines[i].split())
+        else:
+            adjMatrix.append(lines[i].split())
+
+    listOfNodes = initNodesAndEdges(rawNodes, adjMatrix, countNodes)
     # for node in listOfNodes:
     #     print(node)
     #     print(node.getNeighboringNodes())
@@ -201,23 +221,31 @@ def main():
         for j in range(len(adjMatrix)):
             if j != i and float(adjMatrix[i][j]) > 0:
                 G.add_edge(rawNodes[i][0],rawNodes[j][0],weight=float(adjMatrix[i][j]))
+    
     drawGraph(G)
     
-    print("Please input your starting node here: ")
-    for (index, node) in enumerate(listOfNodes):
-        print(index+1, node)
-    startInput = int(input())
-    print("Please input your end node here: ")
-    for (index, node) in enumerate(listOfNodes):
-        print(index+1, node)
-    endInput = int(input())
-    result = aStar(listOfNodes[startInput-1], listOfNodes[endInput-1])
-    print("path", result[0])
-    print("distance", result[1])
+    menuInput = "continue"
+    while menuInput != "exit":
+        print("Please input your starting node here: ")
+        for (index, node) in enumerate(listOfNodes):
+            print(index+1, node)
+        startInput = int(input())
+        print("Please input your end node here: ")
+        for (index, node) in enumerate(listOfNodes):
+            print(index+1, node)
+        endInput = int(input())
+        result = aStar(listOfNodes[startInput-1], listOfNodes[endInput-1])
+        print("path", result[0])
+        print("distance", result[1])
+        
+        #Visualize path
+        drawResult(G, listOfNodes[startInput-1].name, listOfNodes[endInput-1].name)
+
+        print("Type exit if you want to exit")
+        print("Type anything else if you want to continue")
+        menuInput = input()
+        resetNodesValue(listOfNodes)
     
-    #Visualize path
-    drawResult(G, listOfNodes[startInput-1].name, listOfNodes[endInput-1].name)
-    
-    
+    exit()
 
 if __name__ == "__main__": main()
