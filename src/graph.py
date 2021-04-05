@@ -92,11 +92,15 @@ def aStar(startNode, endNode):
         finishedList.append(currentNode)
 
         if currentNode == endNode:
+            # TODO : benerin nilai g
+            shortestDistance = currentNode.getG()
             while currentNode != startNode:
-                shortestDistance += currentNode.getG()
+                print(currentNode, currentNode.getG())
                 result.append(currentNode)
                 currentNode = currentNode.getParent()
             result.append(startNode)
+            print(startNode, startNode.getG())
+            result.reverse()
             return (result, shortestDistance)
         
         listOfNeighboringNodes = currentNode.getNeighboringNodes().keys()
