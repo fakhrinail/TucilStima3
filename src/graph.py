@@ -11,30 +11,36 @@ class Node:
         self.g = 0 # traversal distance from starting node
         self.h = 0 # euclidan distance from end node
         self.f = 0 # g + h
-        self.neighboringNodes = {}
+        self.neighboringNodes = {} # dict of neighboring nodes and edges' weight
     
+    # hash overload
     def __hash__(self):
         return hash(self.name)
 
+    # == overload
     def __eq__(self, value):
         return self.name == value.name
     
+    # < overload
     def __lt__(self, other):
         if self.f == other.f:
             return self.g < other.g
 
         return self.f < other.f
     
+    # print overload
     def __repr__(self):
         return self.name
-        # return self.name + ", f" + str(self.f) + ", g" + str(self.g) + ", h" + str(self.h)
 
-    def calculateEuclidanDistance(self, other):
+    # calculate euclidean distance between nodes
+    def calculateEuclideanDistance(self, other):
         return math.sqrt(pow(self.positionX-other.positionX, 2) + pow(self.positionY-other.positionY, 2))
     
+    # calculate G value between parent and node
     def calculateG(self, parent):
         return self.neighboringNodes[parent] + parent.getG()
     
+    # reset node a* values
     def resetValues(self):
         self.parent = None
         self.g = 0 
@@ -82,7 +88,8 @@ class Node:
     
     def getNeighboringNodes(self):
         return self.neighboringNodes
-    
+
+# draw initial graph    
 def drawGraph(G):
     pos = nx.get_node_attributes(G, 'pos')
     #labels
@@ -96,6 +103,7 @@ def drawGraph(G):
     plt.show()
     #End of Visualisasi Graph awal
     
+# draw result graph
 def drawResult(G,resultGraph):
     
     #position
@@ -121,10 +129,12 @@ def drawResult(G,resultGraph):
     nx.draw(G,pos,node_color=node_colors,edge_color = edge_color_list, with_labels = True)
     plt.show()
 
+# reset all nodes a* values
 def resetNodesValue(listOfNodes):
     for node in listOfNodes:
         node.resetValues()
 
+# init nodes and edge
 def initNodesAndEdges(rawNodes, adjMatrix, countNodes):
     listOfNodes =  []
 
@@ -143,33 +153,36 @@ def initNodesAndEdges(rawNodes, adjMatrix, countNodes):
     
     return listOfNodes
 
+# a* algorithm
 def aStar(startNode, endNode):
-    print("start", startNode)
-    print("end", endNode)
+    print("start node", startNode)
+    print("end node", endNode)
     openQueue = [] # priority queue for to-be-evaluated-nodes
     finishedList = [] #  list for already evaluated nodes
     result = [] # result path
     shortestDistance = 0
     
+    # start algorithm
     openQueue.append(startNode)
     while len(openQueue) != 0:
+        # sort based on f value
         openQueue.sort()
-        print(openQueue)
+        # pop node with the least f value
         currentNode = openQueue.pop(0)
         finishedList.append(currentNode)
 
+        # target node reached
         if currentNode == endNode:
             shortestDistance = currentNode.getG()
-            print(currentNode)
-            print(currentNode.getParent())
+            # retrace path
             while currentNode != startNode:
-                print(currentNode, currentNode.getG())
                 result.append(currentNode)
                 currentNode = currentNode.getParent()
             
             result.append(startNode)
             result.reverse()
 
+            # return path and its distance
             return (result, shortestDistance)
         
         # TODO : add exception buat nangani gaada sisi berhubungan
@@ -178,9 +191,9 @@ def aStar(startNode, endNode):
             if neighboringNode in finishedList:
                 continue
             
-            # hitung f,g,h
+            # calculate f,g,h
             newG = neighboringNode.calculateG(currentNode)
-            newH = neighboringNode.calculateEuclidanDistance(endNode)
+            newH = neighboringNode.calculateEuclideanDistance(endNode)
             newF = newH + newG
             if newG < neighboringNode.getG() or neighboringNode not in openQueue:
                 neighboringNode.setG(newG)
@@ -190,9 +203,16 @@ def aStar(startNode, endNode):
                 if neighboringNode not in openQueue:
                     openQueue.append(neighboringNode)
 
+def printResult(path):
+    for (i, node) in enumerate(path):
+        if i == len(path)-1:
+            print(node)
+        else:
+            print(node , "->", end=" ")
+
 def main():
-    print("Input your file name: ")
-    fileName = input()
+    # get input file
+    fileName = input("Input your file name: ")
     file = open("../test/" + fileName + ".txt", "r")
     lines = file.readlines()
     rawNodes = []
@@ -207,10 +227,6 @@ def main():
             adjMatrix.append(lines[i].split())
 
     listOfNodes = initNodesAndEdges(rawNodes, adjMatrix, countNodes)
-    # for node in listOfNodes:
-    #     print(node)
-    #     print(node.getNeighboringNodes())
-
     print("Welcome to our map!")
     
     #Visualisasi Graph
@@ -223,21 +239,31 @@ def main():
             if j != i and float(adjMatrix[i][j]) > 0:
                 G.add_edge(rawNodes[i][0],rawNodes[j][0],weight=float(adjMatrix[i][j]))
     
+    # draw initial graph
     drawGraph(G)
     
     menuInput = "continue"
     while menuInput != "exit":
-        print("Please input your starting node here: ")
+        # ask input
         for (index, node) in enumerate(listOfNodes):
             print(index+1, node)
-        startInput = int(input())
+        startInput = input("Please input your starting node here: ")
+        while int(startInput) > len(listOfNodes) or int(startInput) < 1:
+            startInput = input("Invalid input, please input the number of your starting node")
         print("Please input your end node here: ")
         for (index, node) in enumerate(listOfNodes):
             print(index+1, node)
-        endInput = int(input())
-        result = aStar(listOfNodes[startInput-1], listOfNodes[endInput-1])
-        print("path", result[0])
-        print("distance", result[1])
+        endInput = input()
+        while int(endInput) > len(listOfNodes) or int(endInput) < 1:
+            endInput = input("Invalid input, please input the number of your starting node")
+        
+        # get result
+        result = aStar(listOfNodes[int(startInput)-1], listOfNodes[int(endInput)-1])
+
+        # print result
+        printResult(result[0])
+        print("shortest distance", result[1])
+
         resultGraph=[]
         for node in result[0]:
             resultGraph.append(node.name)
