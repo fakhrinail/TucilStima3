@@ -26,7 +26,8 @@ class Node:
         return self.f < other.f
     
     def __repr__(self):
-        return self.name + ", f" + str(self.f) + ", g" + str(self.g) + ", h" + str(self.h)
+        return self.name
+        # return self.name + ", f" + str(self.f) + ", g" + str(self.g) + ", h" + str(self.h)
 
     def calculateEuclidanDistance(self, other):
         return math.sqrt(pow(self.positionX-other.positionX, 2) + pow(self.positionY-other.positionY, 2))
