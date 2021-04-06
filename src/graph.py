@@ -88,7 +88,7 @@ def drawGraph(G):
     #labels
     labels = nx.get_edge_attributes(G, 'weight')
     # nodes
-    nx.draw_networkx_nodes(G, pos, node_size=10)
+    nx.draw_networkx_nodes(G, pos, node_size=5)
 
     #biar ada weight
     nx.draw_networkx_edge_labels(G,pos, edge_labels=labels)
@@ -96,14 +96,14 @@ def drawGraph(G):
     plt.show()
     #End of Visualisasi Graph awal
     
-def drawResult(G,start,finish):
-    resultGraph = nx.astar_path(G, start, finish )
+def drawResult(G,resultGraph):
+    
     #position
     pos = nx.get_node_attributes(G, 'pos')
     #labels
     labels = nx.get_edge_attributes(G, 'weight')
     # nodes
-    nx.draw_networkx_nodes(G, pos, node_size=700)
+    nx.draw_networkx_nodes(G, pos, node_size=5)
 
     #biar ada weight
     nx.draw_networkx_edge_labels(G,pos, edge_labels=labels)
@@ -238,9 +238,12 @@ def main():
         result = aStar(listOfNodes[startInput-1], listOfNodes[endInput-1])
         print("path", result[0])
         print("distance", result[1])
+        resultGraph=[]
+        for node in result[0]:
+            resultGraph.append(node.name)
         
         #Visualize path
-        drawResult(G, listOfNodes[startInput-1].name, listOfNodes[endInput-1].name)
+        drawResult(G, resultGraph)
 
         print("Type exit if you want to exit")
         print("Type anything else if you want to continue")
