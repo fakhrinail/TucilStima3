@@ -35,4 +35,4 @@ List of features
 
 ## Author
 * Fakhri Nail Wibowo 13519035
-* Dwianditya Hanif Raharjanto 13519125
+* Dwianditya Hanif Raharjanto 13519046
