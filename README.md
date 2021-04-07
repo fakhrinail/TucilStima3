@@ -1,12 +1,11 @@
-# Project Name
-> Here goes your awesome project description!
+# A* Graph Visualization
+> Visualize graph with .txt input file and get the shortest path by using A* algorithm
 
 ## Table of contents
 * [General info](#general-info)
-* [Screenshots](#screenshots)
 * [Technologies](#technologies)
 * [Setup](#setup)
-* [How to Run] #how-to-run
+* [How to Run] (#how-to-run)
 * [Features](#features)
 
 ## General info
