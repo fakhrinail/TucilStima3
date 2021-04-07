@@ -6,7 +6,7 @@
 * [Screenshots](#screenshots)
 * [Technologies](#technologies)
 * [Setup](#setup)
-* [How to Run] #howtorun
+* [How to Run] #how-to-run
 * [Features](#features)
 
 ## General info
@@ -33,6 +33,6 @@ List of features
 * Graph visualization
 * A* algorithm implementation
 
-## Contact
+## Author
 Fakhri Nail Wibowo 13519035
 Dwianditya Hanif Raharjanto 13519125
