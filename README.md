@@ -9,7 +9,8 @@
 * [Features](#features)
 
 ## General info
-Tugas Kecil 3 Strategi Algoritma IF2211
+Tugas Kecil 3 Strategi Algoritma IF2211 <br>
+A* graph visualization implemented using Python
 
 ## Technologies
 * Python - version 3.8.2
@@ -17,15 +18,15 @@ Tugas Kecil 3 Strategi Algoritma IF2211
 * Networkx - version 2.5.1
 
 ## Setup
-Install python with at least version 3.8.2
-Install matplotlib library
-Install networkx library
+* Install python with at least version 3.8.2
+* Install matplotlib library
+* Install networkx library
 
 ## How to Run
-Open src directory and run graph.py using python graph.py
-Input the file name that is available in test directory
-Input nodes' number
-Get the graph result
+* Open src directory and run graph.py using python graph.py
+* Input the file name that is available in test directory
+* Input nodes' number
+* Get the graph result
 
 ## Features
 List of features
@@ -33,5 +34,5 @@ List of features
 * A* algorithm implementation
 
 ## Author
-Fakhri Nail Wibowo 13519035
-Dwianditya Hanif Raharjanto 13519125
+* Fakhri Nail Wibowo 13519035
+* Dwianditya Hanif Raharjanto 13519125
