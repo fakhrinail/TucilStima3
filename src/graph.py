@@ -155,8 +155,8 @@ def initNodesAndEdges(rawNodes, adjMatrix, countNodes):
 
 # a* algorithm
 def aStar(startNode, endNode):
-    print("start node", startNode)
-    print("end node", endNode)
+    print("Start node is", startNode)
+    print("End node is", endNode)
     openQueue = [] # priority queue for to-be-evaluated-nodes
     finishedList = [] #  list for already evaluated nodes
     result = [] # result path
@@ -203,12 +203,30 @@ def aStar(startNode, endNode):
                 if neighboringNode not in openQueue:
                     openQueue.append(neighboringNode)
 
-def printResult(path):
+def printResult(result, graph):
+    if result is None:
+        print("No available path")
+    else:
+        printPath(result[0])
+        printDistance(result[1])
+
+        # add result nodes to list
+        resultGraph=[]
+        for node in result[0]:
+            resultGraph.append(node.name)
+        
+        #Visualize path
+        drawResult(graph, resultGraph)
+
+def printPath(path):
     for (i, node) in enumerate(path):
         if i == len(path)-1:
             print(node)
         else:
             print(node , "->", end=" ")
+
+def printDistance(distance):
+    print("The shortest distance is " + str(distance))
 
 def main():
     # get input file
@@ -247,29 +265,20 @@ def main():
         # ask input
         for (index, node) in enumerate(listOfNodes):
             print(index+1, node)
-        startInput = input("Please input your starting node here: ")
+        startInput = input("Input your starting node here: ")
         while int(startInput) > len(listOfNodes) or int(startInput) < 1:
             startInput = input("Invalid input, please input the number of your starting node")
-        print("Please input your end node here: ")
         for (index, node) in enumerate(listOfNodes):
             print(index+1, node)
-        endInput = input()
+        endInput = input("Input your end node here: ")
         while int(endInput) > len(listOfNodes) or int(endInput) < 1:
-            endInput = input("Invalid input, please input the number of your starting node")
+            endInput = input("Invalid input, input the number of your starting node")
         
         # get result
         result = aStar(listOfNodes[int(startInput)-1], listOfNodes[int(endInput)-1])
 
         # print result
-        printResult(result[0])
-        print("shortest distance", result[1])
-
-        resultGraph=[]
-        for node in result[0]:
-            resultGraph.append(node.name)
-        
-        #Visualize path
-        drawResult(G, resultGraph)
+        printResult(result, G)
 
         print("Type exit if you want to exit")
         print("Type anything else if you want to continue")
