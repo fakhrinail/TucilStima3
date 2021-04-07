@@ -262,12 +262,12 @@ def main():
             print(index+1, node)
         startInput = input("Input your starting node here: ")
         while int(startInput) > len(listOfNodes) or int(startInput) < 1:
-            startInput = input("Invalid input, please input the number of your starting node")
+            startInput = input("Invalid input, please input the number of your starting node: ")
         for (index, node) in enumerate(listOfNodes):
             print(index+1, node)
         endInput = input("Input your end node here: ")
         while int(endInput) > len(listOfNodes) or int(endInput) < 1:
-            endInput = input("Invalid input, input the number of your starting node")
+            endInput = input("Invalid input, input the number of your starting node: ")
         
         # get result
         result = aStar(listOfNodes[int(startInput)-1], listOfNodes[int(endInput)-1])
