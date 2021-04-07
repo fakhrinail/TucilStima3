@@ -19,8 +19,8 @@ A* graph visualization implemented using Python
 
 ## Setup
 * Install python with at least version 3.8.2
-* Install matplotlib library
-* Install networkx library
+* Install matplotlib library (link for tutorial https://pypi.org/project/matplotlib/)
+* Install networkx library (link for tutorial https://pypi.org/project/networkx/)
 
 ## How to Run
 * Open src directory and run graph.py using python graph.py
