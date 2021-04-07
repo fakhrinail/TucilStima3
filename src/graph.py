@@ -185,7 +185,6 @@ def aStar(startNode, endNode):
             # return path and its distance
             return (result, shortestDistance)
         
-        # TODO : add exception buat nangani gaada sisi berhubungan
         listOfNeighboringNodes = currentNode.getNeighboringNodes().keys()
         for neighboringNode in listOfNeighboringNodes:
             if neighboringNode in finishedList:
